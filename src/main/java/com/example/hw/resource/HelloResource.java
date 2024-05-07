@@ -1,4 +1,4 @@
-package com.example.hw;
+package com.example.hw.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
