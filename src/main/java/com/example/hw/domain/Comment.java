@@ -4,6 +4,7 @@ public class Comment {
     private String author;
     private String content;
     private int userId;
+    private int postId;
 
     public Comment() {
     }

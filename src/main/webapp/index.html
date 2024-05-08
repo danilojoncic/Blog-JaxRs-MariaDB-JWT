@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        * {
+            text-align: center;
+        }
+
+        #blog_posts_page {
+            width: 80%;
+            margin: auto;
+        }
+
+        #add_new_post_form {
+            width: 80%;
+            margin: auto;
+        }
+
+        #post_preview_page {
+            width: 80%;
+            margin: auto;
+        }
+
+        #login_page{
+            width: 80%;
+            margin: auto;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: cornflowerblue;
+            color: white;
+        }
+
+        .card-header h5 {
+            color: white;
+        }
+
+        .card-header h6 {
+            color: white;
+        }
+        .tekstic h6 {
+            color: white;
+        }
+
+        .card-body {
+            text-align: left;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<div id="login_page">
+    <h1>Login</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="blog_posts_page" style="display: none">
+    <h1>All Posts</h1>
+    <div id="posts_list">
+        <!--    ovdje ubacujemo sve ostalo-->
+    </div>
+    <button id="add_new_post_button" type="button" class="btn btn-primary btn-lg btn-block mt-3">Add Post</button>
+</div>
+
+<div id="add_new_post_form" class="container" style="display: none;">
+    <h2>Post Form</h2>
+    <button id="go_back_button1" class="btn btn-primary">Back To All Posts</button>
+    <div class="form-group">
+        <label for="post_authorInput">Author:</label>
+        <input id="post_authorInput" name="post_authorInput" type="text" class="form-control"
+               placeholder="Enter author name">
+    </div>
+    <div class="form-group">
+        <label for="post_titleInput">Title:</label>
+        <input id="post_titleInput" name="post_titleInput" type="text" class="form-control"
+               placeholder="Enter post title">
+    </div>
+    <div class="form-group">
+        <label for="post_contentInput">Content:</label>
+        <textarea id="post_contentInput" name="post_contentInput" class="form-control" rows="5"
+                  placeholder="Enter post content"></textarea>
+    </div>
+    <button id="add_post_button" class="btn btn-primary">Submit Post</button>
+</div>
+
+<div id="post_preview_page" class="container mt-3" style="display: none;">
+    <h1>Post Preview</h1>
+    <button id="go_back_button" class="btn btn-primary">Back To All Posts</button>
+
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h5 id="post_preview_title" class="card-title">Post Title</h5>
+            <h6 id='post_preview_author' class="tekstic">By Post Author</h6>
+        </div>
+        <div class="card-body">
+            <p id="post_preview_content" class="card-text">Post Text</p>
+        </div>
+    </div>
+    <hr>
+    <h2>Comments</h2>
+    <div id="comments_list"></div>
+    <div id="add_new_comment_form" class="container">
+        <h2>Add comment on post.</h2>
+        <div class="form-group">
+            <label for="authorInput">Author:</label>
+            <input id='add_comment_authorInput' type="text" class="form-control" id="authorInput"
+                   placeholder="Enter author name">
+        </div>
+        <div class="form-group">
+            <label for="contentInput">Content:</label>
+            <textarea id='add_comment_contentInput' class="form-control" id="contentInput" rows="5"
+                      placeholder="Enter post content"></textarea>
+        </div>
+        <button id="add_comment_button" type="submit" class="btn btn-primary">Submit Post</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        //display_all_posts();
+
+        $('#add_new_post_button').click(function () {
+            display_new_post_form();
+        });
+
+        $('#go_back_button').click(function () {
+            display_all_posts();
+        });
+
+        $('#go_back_button1').click(function () {
+            display_all_posts();
+        });
+
+
+        $('#add_post_button').click(function () {
+            var post = {
+                author: $('#post_authorInput').val(),
+                title: $('#post_titleInput').val(),
+                text: $('#post_contentInput').val()
+            };
+
+            $.ajax({
+                url: 'api/posts',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(post),
+                success: function () {
+                    display_all_posts();
+                }
+            });
+        });
+
+        $('#add_comment_button').click(function () {
+            var postId = $('#post_preview_title').data('id');
+            var comment = {
+                author: $('#add_comment_authorInput').val(),
+                text: $('#add_comment_contentInput').val(),
+                postId: postId
+            };
+
+            $.ajax({
+                url: 'api/comments',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(comment),
+                success: function (comment) {
+                    make_comment_element(comment);
+                }
+            });
+        });
+
+        function display_all_posts() {
+            $('#blog_posts_page').show();
+            $('#add_new_post_form').hide();
+            $('#post_preview_page').hide();
+
+            $.get('api/posts', function (posts) {
+                $('#posts_list').empty();
+                $.each(posts, function (index, post) {
+                    var post_element = make_post_element(post);
+                    post_element.click(function () {
+                        display_post(post);
+                    });
+                    $('#posts_list').append(post_element);
+                });
+            });
+        }
+
+        function display_new_post_form() {
+            $('#blog_posts_page').hide();
+            $('#add_new_post_form').show();
+            $('#post_preview_page').hide();
+        }
+
+        function display_post(post) {
+            $('#blog_posts_page').hide();
+            $('#post_preview_page').show();
+            $('#post_preview_title').text(post.title).data('id', post.id);
+            $('#post_preview_author').text(post.author);
+            $('#post_preview_content').text(post.text);
+
+            $('#comments_list').empty();
+            $.get('api/comments/' + post.id, function (comments) {
+                $.each(comments, function (index, comment) {
+                    make_comment_element(comment);
+                });
+            });
+        }
+
+        function make_post_element(post) {
+            var card = $('<div class="card"></div>');
+            var cardHeader = $('<div class="card-header">' +
+                '<h5 class="card-title">' + post.title + '</h5>' +
+                '<h6 class="tekstic">By ' + post.author + '</h6>' +
+                '</div>');
+            var cardBody = $('<div class="card-body">' +
+                '<p class="card-text">' + post.text + '</p>' +
+                '<p class="card-text">' + post.date + '</p>' +
+                '</div>');
+
+            card.append(cardHeader);
+            card.append(cardBody);
+
+            return card;
+        }
+        function make_comment_element(comment) {
+            var commentDiv = $('<div class="card">' +
+                '<div class="card-body">' +
+                '<h5 class="card-title">' + comment.author + '</h5>' +
+                '<p class="card-text">' + comment.text + '</p>' +
+                '</div>' +
+                '</div>');
+
+            $('#comments_list').append(commentDiv);
+        }
+    });
+</script>
+</body>
+</html>

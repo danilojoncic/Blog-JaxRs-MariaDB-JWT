@@ -3,6 +3,7 @@ package com.example.hw.domain;
 public class Post {
 
     private int id;
+    //u sustini strani kljud na usera jer user gledamo po username
     private String authorName;
     private String title;
     private String content;
