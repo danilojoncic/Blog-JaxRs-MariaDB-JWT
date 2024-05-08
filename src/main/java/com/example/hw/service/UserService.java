@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.hw.domain.User;
+import com.example.hw.dto.UserDto;
 import com.example.hw.repository.user.UserRepository;
 import com.example.hw.repository.user.UserRepositoryInterface;
 
@@ -38,5 +39,10 @@ public class UserService {
         String username = jwt.getSubject();
         User user = this.userRepository.findUser(username);
         return user != null;
+    }
+
+
+    public UserDto getName(Integer id){
+        return userRepository.findById(id);
     }
 }

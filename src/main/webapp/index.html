@@ -145,7 +145,6 @@
         <button id="add_comment_button" type="submit" class="btn btn-primary">Submit Post</button>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
 
@@ -158,10 +157,14 @@
                 url: 'api/user/login',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({username: username,
-                password: hashedPassword}),
+                data: JSON.stringify({
+                    username: username,
+                    password: hashedPassword
+                }),
                 success: function (response) {
                     if (response.jwt) {
+                        // Store JWT token in local storage
+                        localStorage.setItem('token', response.jwt);
                         $('#login_page').hide();
                         $('#blog_posts_page').show();
                         display_all_posts();
@@ -196,11 +199,17 @@
                 text: $('#post_contentInput').val()
             };
 
+            // Get token from local storage
+            var token = localStorage.getItem('token');
+
             $.ajax({
                 url: 'api/posts',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(post),
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
                 success: function () {
                     display_all_posts();
                 }
@@ -215,11 +224,17 @@
                 postId: postId
             };
 
+            // Get token from local storage
+            var token = localStorage.getItem('token');
+
             $.ajax({
                 url: 'api/comments',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(comment),
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
                 success: function (comment) {
                     make_comment_element(comment);
                 }
@@ -231,15 +246,21 @@
             $('#add_new_post_form').hide();
             $('#post_preview_page').hide();
 
-            $.get('api/posts', function (posts) {
-                $('#posts_list').empty();
-                $.each(posts, function (index, post) {
-                    var post_element = make_post_element(post);
-                    post_element.click(function () {
-                        display_post(post);
+            // Get token from local storage
+            var token = localStorage.getItem('token');
+
+            $.ajax({
+                url: 'api/posts',
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (posts) {
+                    $('#posts_list').empty();
+                    $.each(posts, function (index, post) {
+                        make_post_element(post);
                     });
-                    $('#posts_list').append(post_element);
-                });
+                }
             });
         }
 
@@ -252,9 +273,9 @@
         function display_post(post) {
             $('#blog_posts_page').hide();
             $('#post_preview_page').show();
-            $('#post_preview_title').text(post.title).data('id', post.id);
-            $('#post_preview_author').text(post.author);
-            $('#post_preview_content').text(post.text);
+            $('#post_preview_title').text(post.title);
+            $('#post_preview_author').text(post.authorName);
+            $('#post_preview_content').text(post.content);
 
             $('#comments_list').empty();
             $.get('api/comments/' + post.id, function (comments) {
@@ -265,21 +286,29 @@
         }
 
         function make_post_element(post) {
-            var card = $('<div class="card"></div>');
-            var cardHeader = $('<div class="card-header">' +
-                '<h5 class="card-title">' + post.title + '</h5>' +
-                '<h6 class="tekstic">By ' + post.author + '</h6>' +
-                '</div>');
-            var cardBody = $('<div class="card-body">' +
-                '<p class="card-text">' + post.text + '</p>' +
-                '<p class="card-text">' + post.date + '</p>' +
-                '</div>');
+            console.log(post.text)
+            $.get('api/user/' + post.authorName, function(user) {
+                var card = $('<div class="card"></div>');
+                var cardHeader = $('<div class="card-header">' +
+                    '<h5 class="card-title">' + post.title + '</h5>' +
+                    '<h6 class="tekstic">By ' + user.name + '</h6>' +
+                    '</div>').data('id', post.id);
+                var cardBody = $('<div class="card-body">' +
+                    '<p class="card-text">' + post.content + '</p>' +
+                    '<p class="card-text">' + post.date + '</p>' +
+                    '</div>');
 
-            card.append(cardHeader);
-            card.append(cardBody);
+                card.append(cardHeader);
+                card.append(cardBody);
+                card.click(function () {
+                    display_post(post);
+                });
 
-            return card;
+                $('#posts_list').append(card);
+            });
         }
+
+
         function make_comment_element(comment) {
             var commentDiv = $('<div class="card">' +
                 '<div class="card-body">' +
@@ -292,5 +321,6 @@
         }
     });
 </script>
+
 </body>
 </html>

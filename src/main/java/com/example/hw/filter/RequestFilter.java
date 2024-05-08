@@ -1,5 +1,6 @@
 package com.example.hw.filter;
 
+import com.example.hw.resource.CommentResource;
 import com.example.hw.resource.PostResource;
 import com.example.hw.service.UserService;
 
@@ -17,8 +18,6 @@ public class RequestFilter implements ContainerRequestFilter {
     UserService userService;
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
-//        if (true) return;
 
         if (!this.isAuthRequired(requestContext)) {
             return;
@@ -45,7 +44,8 @@ public class RequestFilter implements ContainerRequestFilter {
 
         List<Object> matchedResources = req.getUriInfo().getMatchedResources();
         for (Object matchedResource : matchedResources) {
-            if (matchedResource instanceof PostResource) {
+            if (matchedResource instanceof PostResource
+                    || matchedResource instanceof CommentResource) {
                 return true;
             }
         }
