@@ -1,6 +1,7 @@
 package com.example.hw.resource;
 
 import com.example.hw.domain.Post;
+import com.example.hw.dto.CreatePostDto;
 import com.example.hw.service.PostService;
 
 import javax.inject.Inject;
@@ -17,7 +18,6 @@ public class PostResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response all() {
-        System.out.println("GET CALLED: Fetching all posts");
         return Response.ok(this.postService.allPosts()).build();
     }
 
@@ -26,16 +26,14 @@ public class PostResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response find(@PathParam("id") Integer id) {
-        System.out.println("GET CALLED: Fetching post with id: " + id);
         return Response.ok(this.postService.findPost(id)).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Post create(@Valid Post post) {
-        System.out.println("POST CALLED: Creating a new post: " + post.getTitle());
-        return this.postService.addPost(post);
+    public Post create(@Valid CreatePostDto createPostDto) {
+        return this.postService.addPost(createPostDto);
     }
 
 }
