@@ -1,29 +1,44 @@
 package com.example.hw.domain;
 
 public class Comment {
-    private String author;
+    private int id;
+    private int author;
     private String content;
-    private int userId;
     private int postId;
 
     public Comment() {
     }
 
-    public Comment(String author, String content) {
+    public Comment(int author, String content) {
         this.author = author;
         this.content = content;
     }
 
-    public int getUserId() {
-        return userId;
+    public Comment(int id, int postId, int author,String content) {
+        this.id = id;
+        this.author = author;
+        this.content = content;
+        this.postId = postId;
+
     }
 
-    public String getAuthor() {
+
+
+    public int getPostId() {
+        return postId;
+    }
+
+
+    public int getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(int author) {
         this.author = author;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public String getContent() {

@@ -31,12 +31,12 @@ public abstract class MDBAbstractRepository {
     }
 
     protected String getUsername() {
-        return "dan";
+        return "root";
     }
 
     //naravno secret ;)
     protected String getPassword() {
-        return "secret";
+        return "";
     }
 
     protected void closeStatement(Statement statement) {

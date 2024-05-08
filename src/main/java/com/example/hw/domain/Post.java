@@ -4,28 +4,49 @@ public class Post {
 
     private int id;
     //u sustini strani kljud na usera jer user gledamo po username
-    private String authorName;
+    private int authorName;
     private String title;
     private String content;
+    private String date;
 
     public Post() {
     }
 
-    public Post(String authorName, String title, String content) {
+    public Post(int authorName, String title, String content) {
         this.authorName = authorName;
         this.title = title;
         this.content = content;
+    }
+
+    public Post(int id, int authorName, String title, String content, String date) {
+        this.id = id;
+        this.authorName = authorName;
+        this.title = title;
+        this.content = content;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getAuthorName() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAuthorName() {
         return authorName;
     }
 
-    public void setAuthorName(String authorName) {
+    public void setAuthorName(int authorName) {
         this.authorName = authorName;
     }
 

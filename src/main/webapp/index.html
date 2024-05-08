@@ -155,16 +155,17 @@
             var hashedPassword = CryptoJS.SHA256($('#password').val()).toString(CryptoJS.enc.Base64);
 
             $.ajax({
-                url: 'api/login',
+                url: 'api/user/login',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({username: username,
                 password: hashedPassword}),
                 success: function (response) {
-                    if (response.success) {
+                    if (response.jwt) {
                         $('#login_page').hide();
                         $('#blog_posts_page').show();
                         display_all_posts();
+
                     } else {
                         alert(response.message);
                     }
