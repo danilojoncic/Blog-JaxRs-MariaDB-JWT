@@ -23,7 +23,7 @@ public class CommentRepository extends MDBAbstractRepository implements CommentR
 
             preparedStatement = connection.prepareStatement("INSERT INTO comments (post, author, text) VALUES(?, ?, ?)", generatedColumns);
             preparedStatement.setInt(1, comment.getPostId());
-            preparedStatement.setInt(2, comment.getAuthor());
+            preparedStatement.setInt(2, comment.getAuthorId());
             preparedStatement.setString(3, comment.getContent());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();

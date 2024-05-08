@@ -276,12 +276,19 @@
             $('#post_preview_title').text(post.title);
             $('#post_preview_author').text(post.authorName);
             $('#post_preview_content').text(post.content);
-
             $('#comments_list').empty();
-            $.get('api/comments/' + post.id, function (comments) {
-                $.each(comments, function (index, comment) {
-                    make_comment_element(comment);
-                });
+            var token = localStorage.getItem('token');
+            $.ajax({
+                url: 'api/comments/'+post.id,
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (comments) {
+                    $.each(comments, function (index, comment) {
+                        make_comment_element(comment)
+                    });
+                }
             });
         }
 

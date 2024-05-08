@@ -4,6 +4,7 @@ import com.example.hw.resource.CommentResource;
 import com.example.hw.resource.PostResource;
 import com.example.hw.service.UserService;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -14,22 +15,24 @@ import java.util.List;
 
 @Provider
 public class RequestFilter implements ContainerRequestFilter {
+
     @Inject
     UserService userService;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
 
-        if (!this.isAuthRequired(requestContext)) {
+        if (!isAuthRequired(requestContext)) {
             return;
         }
 
         try {
             String token = requestContext.getHeaderString("Authorization");
-            if(token != null && token.startsWith("Bearer ")) {
+            if (token != null && token.startsWith("Bearer ")) {
                 token = token.replace("Bearer ", "");
             }
 
-            if (!this.userService.isAuthorized(token)) {
+            if (!userService.isAuthorized(token)) {
                 requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
             }
         } catch (Exception exception) {
@@ -41,6 +44,7 @@ public class RequestFilter implements ContainerRequestFilter {
         if (req.getUriInfo().getPath().contains("login")) {
             return false;
         }
+        System.out.println("NE");
 
         List<Object> matchedResources = req.getUriInfo().getMatchedResources();
         for (Object matchedResource : matchedResources) {

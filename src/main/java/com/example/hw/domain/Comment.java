@@ -2,7 +2,7 @@ package com.example.hw.domain;
 
 public class Comment {
     private int id;
-    private int author;
+    private int authorId;
     private String content;
     private int postId;
 
@@ -10,31 +10,37 @@ public class Comment {
     }
 
     public Comment(int author, String content) {
-        this.author = author;
+        this.authorId = author;
         this.content = content;
     }
 
     public Comment(int id, int postId, int author,String content) {
         this.id = id;
-        this.author = author;
+        this.authorId = author;
         this.content = content;
         this.postId = postId;
 
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getPostId() {
         return postId;
     }
 
 
-    public int getAuthor() {
-        return author;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(int author) {
-        this.author = author;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public void setPostId(int postId) {

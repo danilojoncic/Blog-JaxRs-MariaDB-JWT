@@ -23,7 +23,7 @@ public class PostRepository extends MDBAbstractRepository implements PostReposit
 
             preparedStatement = connection.prepareStatement("INSERT INTO posts (title, author, text, date) VALUES(?, ?, ?, ?)", generatedColumns);
             preparedStatement.setString(1, post.getTitle());
-            preparedStatement.setInt(2, post.getAuthorName());
+            preparedStatement.setInt(2, post.getAuthorId());
             preparedStatement.setString(3, post.getContent());
             java.util.Date date = new java.util.Date();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM:dd:yyyy,hh:mm");

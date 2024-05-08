@@ -25,9 +25,9 @@ public class PostResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Post find(@PathParam("id") Integer id) {
+    public Response find(@PathParam("id") Integer id) {
         System.out.println("GET CALLED: Fetching post with id: " + id);
-        return this.postService.findPost(id);
+        return Response.ok(this.postService.findPost(id)).build();
     }
 
     @POST

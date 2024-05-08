@@ -1,0 +1,79 @@
+GET http://localhost:8080/hw_war_exploded/api/comments/2
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-09T001758.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts/2
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-09T001721.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-09T001656.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-08T234953.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-08T234937.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-08T234618.200.json
+
+###
+
+GET http://localhost:8080/hw_war_exploded/api/posts
+Accept: application/json
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-08T234605.200.json
+
+###
+
+GET http://localhost/api/posts
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-05-08T234534.404.html
+
+###
+

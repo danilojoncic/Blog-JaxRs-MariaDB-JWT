@@ -4,7 +4,7 @@ public class Post {
 
     private int id;
     //u sustini strani kljud na usera jer user gledamo po username
-    private int authorName;
+    private int authorId;
     private String title;
     private String content;
     private String date;
@@ -12,15 +12,15 @@ public class Post {
     public Post() {
     }
 
-    public Post(int authorName, String title, String content) {
-        this.authorName = authorName;
+    public Post(int authorId, String title, String content) {
+        this.authorId = authorId;
         this.title = title;
         this.content = content;
     }
 
-    public Post(int id, int authorName, String title, String content, String date) {
+    public Post(int id, int authorId, String title, String content, String date) {
         this.id = id;
-        this.authorName = authorName;
+        this.authorId = authorId;
         this.title = title;
         this.content = content;
         this.date = date;
@@ -42,12 +42,12 @@ public class Post {
         this.id = id;
     }
 
-    public int getAuthorName() {
-        return authorName;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthorName(int authorName) {
-        this.authorName = authorName;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public String getTitle() {
