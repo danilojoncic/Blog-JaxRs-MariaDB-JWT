@@ -30,7 +30,9 @@ public class PostService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM:dd:yyyy , hh:mm");
         Date date = new Date();
         post.setDate(simpleDateFormat.format(date));
+        System.out.println("CREATE POST DTO author name:" + createPostDto.getAuthor());
         post.setAuthorId(userRepositoryInterface.findUser(createPostDto.getAuthor()).getId());
+        System.out.println("AUTHOR ID FROM THE POST " + post.getAuthorId());
         return this.postRepository.addPost(post);
     }
     public List<PostDTO> allPosts() {

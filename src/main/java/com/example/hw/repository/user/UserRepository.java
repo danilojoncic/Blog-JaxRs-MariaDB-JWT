@@ -25,11 +25,12 @@ public class UserRepository extends MDBAbstractRepository implements UserReposit
             resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
-                String userId = resultSet.getString("name");
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
                 String hashedPassword = resultSet.getString("password");
-                user = new User(userId,hashedPassword);
+                user = new User(id,name,hashedPassword);
             }
-
+            System.out.println("");
             resultSet.close();
             preparedStatement.close();
             connection.close();

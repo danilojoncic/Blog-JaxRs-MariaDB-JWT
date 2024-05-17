@@ -28,7 +28,7 @@
             margin: auto;
         }
 
-        #login_page{
+        #login_page {
             width: 80%;
             margin: auto;
         }
@@ -49,6 +49,7 @@
         .card-header h6 {
             color: white;
         }
+
         .tekstic h6 {
             color: white;
         }
@@ -82,8 +83,6 @@
     </div>
 </div>
 
-
-
 <div id="blog_posts_page" style="display: none">
     <h1>All Posts</h1>
     <div id="posts_list">
@@ -97,18 +96,15 @@
     <button id="go_back_button1" class="btn btn-primary">Back To All Posts</button>
     <div class="form-group">
         <label for="post_authorInput">Author:</label>
-        <input id="post_authorInput" name="post_authorInput" type="text" class="form-control"
-               placeholder="Enter author name">
+        <input id="post_authorInput" name="post_authorInput" type="text" class="form-control" placeholder="Enter author name" readonly>
     </div>
     <div class="form-group">
         <label for="post_titleInput">Title:</label>
-        <input id="post_titleInput" name="post_titleInput" type="text" class="form-control"
-               placeholder="Enter post title">
+        <input id="post_titleInput" name="post_titleInput" type="text" class="form-control" placeholder="Enter post title">
     </div>
     <div class="form-group">
         <label for="post_contentInput">Content:</label>
-        <textarea id="post_contentInput" name="post_contentInput" class="form-control" rows="5"
-                  placeholder="Enter post content"></textarea>
+        <textarea id="post_contentInput" name="post_contentInput" class="form-control" rows="5" placeholder="Enter post content"></textarea>
     </div>
     <button id="add_post_button" class="btn btn-primary">Submit Post</button>
 </div>
@@ -133,20 +129,33 @@
     <div id="add_new_comment_form" class="container">
         <h2>Add comment on post.</h2>
         <div class="form-group">
-            <label for="authorInput">Author:</label>
-            <input id="add_comment_authorInput" type="text" class="form-control" id="authorInput"
-                   placeholder="Enter author name">
+            <label for="add_comment_authorInput">Author:</label>
+            <input id="add_comment_authorInput" type="text" class="form-control" placeholder="Enter author name" readonly>
         </div>
         <div class="form-group">
-            <label for="contentInput">Content:</label>
-            <textarea id="add_comment_contentInput" class="form-control" id="contentInput" rows="5"
-                      placeholder="Enter post content"></textarea>
+            <label for="add_comment_contentInput">Content:</label>
+            <textarea id="add_comment_contentInput" class="form-control" rows="5" placeholder="Enter post content"></textarea>
         </div>
-        <button id="add_comment_button" type="submit" class="btn btn-primary">Submit Post</button>
+        <button id="add_comment_button" type="submit" class="btn btn-primary">Submit Comment</button>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
+        function setup(){
+            $("add_comment_contentInput").val(localStorage.getItem("username"));
+            $("post_contentInput").val(localStorage.getItem("username"));
+        }
+
+        // Function to decode JWT token
+        function parseJwt(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
 
         $('#loginForm').submit(function (e) {
             e.preventDefault();
@@ -163,10 +172,17 @@
                 }),
                 success: function (response) {
                     if (response.jwt) {
-                        // Store JWT token in local storage
+
                         localStorage.setItem('token', response.jwt);
+
+                        var decodedToken = parseJwt(response.jwt);
+                        var username = decodedToken.sub;
+
+                        localStorage.setItem('username', username);
+                        console.log("OVO JE USERNAME " + username);
                         $('#login_page').hide();
                         $('#blog_posts_page').show();
+                        setup()
                         display_all_posts();
 
                     } else {
@@ -191,15 +207,13 @@
             display_all_posts();
         });
 
-
         $('#add_post_button').click(function () {
             var post = {
-                author: $('#post_authorInput').val(),
+                author: localStorage.getItem('username').toString(),
                 title: $('#post_titleInput').val(),
                 text: $('#post_contentInput').val()
             };
 
-            // Get token from local storage
             var token = localStorage.getItem('token');
 
             $.ajax({
@@ -219,7 +233,7 @@
         $('#add_comment_button').click(function () {
             var postId = $('#post_preview_title').data('id');
             var comment = {
-                author: $('#add_comment_authorInput').val(),
+                author: localStorage.getItem('username').toString(),
                 text: $('#add_comment_contentInput').val(),
                 postId: postId
             };
@@ -268,53 +282,57 @@
             $('#blog_posts_page').hide();
             $('#add_new_post_form').show();
             $('#post_preview_page').hide();
+
+            // Pre-fill the author's name
+            var userName = localStorage.getItem('userName');
+            $('#post_authorInput').val(userName);
         }
 
         function display_post(post) {
             $('#blog_posts_page').hide();
             $('#post_preview_page').show();
-            $('#post_preview_title').text(post.title);
-            $('#post_preview_author').text(post.authorName);
-            $('#post_preview_content').text(post.content);
+            $('#post_preview_title').text(post.title).data('id', post.postId);
+            $('#post_preview_author').text(post.author);
+            $('#post_preview_content').text(post.text);
             $('#comments_list').empty();
             var token = localStorage.getItem('token');
             $.ajax({
-                url: 'api/comments/'+post.id,
+                url: 'api/comments/'+post.postId,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
                 success: function (comments) {
                     $.each(comments, function (index, comment) {
-                        make_comment_element(comment)
+                        make_comment_element(comment);
                     });
                 }
             });
+
+            // Pre-fill the author's name in the comment form
+            var userName = localStorage.getItem('userName');
+            $('#add_comment_authorInput').val(userName);
         }
 
         function make_post_element(post) {
-            console.log(post.text)
-            $.get('api/user/' + post.authorName, function(user) {
-                var card = $('<div class="card"></div>');
-                var cardHeader = $('<div class="card-header">' +
-                    '<h5 class="card-title">' + post.title + '</h5>' +
-                    '<h6 class="tekstic">By ' + user.name + '</h6>' +
-                    '</div>').data('id', post.id);
-                var cardBody = $('<div class="card-body">' +
-                    '<p class="card-text">' + post.content + '</p>' +
-                    '<p class="card-text">' + post.date + '</p>' +
-                    '</div>');
+            var card = $('<div class="card"></div>');
+            var cardHeader = $('<div class="card-header">' +
+                '<h5 class="card-title">' + post.title + '</h5>' +
+                '<h6 class="tekstic">By ' + post.author + '</h6>' +
+                '</div>').data('id', post.postId);
+            var cardBody = $('<div class="card-body">' +
+                '<p class="card-text">' + post.text + '</p>' +
+                '<p class="card-text">' + post.date + '</p>' +
+                '</div>');
 
-                card.append(cardHeader);
-                card.append(cardBody);
-                card.click(function () {
-                    display_post(post);
-                });
-
-                $('#posts_list').append(card);
+            card.append(cardHeader);
+            card.append(cardBody);
+            card.click(function () {
+                display_post(post);
             });
-        }
 
+            $('#posts_list').append(card);
+        }
 
         function make_comment_element(comment) {
             var commentDiv = $('<div class="card">' +

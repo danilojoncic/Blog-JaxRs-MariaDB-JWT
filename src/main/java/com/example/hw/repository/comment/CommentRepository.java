@@ -1,6 +1,7 @@
 package com.example.hw.repository.comment;
 
 import com.example.hw.domain.Comment;
+import com.example.hw.dto.CommentDTO;
 import com.example.hw.repository.MDBAbstractRepository;
 
 import java.sql.Connection;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class CommentRepository extends MDBAbstractRepository implements CommentRepositoryInterface {
     @Override
-    public Comment addComment(Comment comment) {
+    public Comment addComment(CommentDTO comment) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -22,9 +23,9 @@ public class CommentRepository extends MDBAbstractRepository implements CommentR
             String[] generatedColumns = {"id"};
 
             preparedStatement = connection.prepareStatement("INSERT INTO comments (post, author, text) VALUES(?, ?, ?)", generatedColumns);
-            preparedStatement.setInt(1, comment.getPostId());
-            preparedStatement.setInt(2, comment.getAuthorId());
-            preparedStatement.setString(3, comment.getContent());
+            preparedStatement.setInt(1, comment.getPost_id());
+            preparedStatement.setString(2, comment.getAuthor());
+            preparedStatement.setString(3, comment.getText());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
@@ -36,7 +37,7 @@ public class CommentRepository extends MDBAbstractRepository implements CommentR
             this.closeConnection(connection);
         }
 
-        return comment;
+        return null;
     }
 
     @Override

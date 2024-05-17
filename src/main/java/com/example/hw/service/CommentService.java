@@ -21,7 +21,8 @@ public class CommentService {
 
     //
     public Comment addComment(Comment comment) {
-        return this.commentRepository.addComment(comment);
+        //return this.commentRepository.addComment(comment);
+        return null;
     }
 
     public List<CommentDTO> allComments(int id) {
@@ -29,7 +30,7 @@ public class CommentService {
         List<CommentDTO> dto = new ArrayList<>();
         for (Comment comment : comments) {
             CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setId(comment.getId());
+            commentDTO.setPost_id(comment.getId());
             commentDTO.setText(comment.getContent());
             commentDTO.setAuthor(this.userRepositoryInterface.findById(comment.getAuthorId()).getName());
             dto.add(commentDTO);
