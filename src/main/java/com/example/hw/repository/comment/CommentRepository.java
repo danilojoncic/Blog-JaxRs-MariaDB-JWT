@@ -23,15 +23,21 @@ public class CommentRepository extends MDBAbstractRepository implements CommentR
             preparedStatement = connection.prepareStatement("SELECT id FROM users WHERE name = ?");
             preparedStatement.setString(1,comment.getAuthor());
             resultSet = preparedStatement.executeQuery();
-            int author_id = resultSet.getInt("id");
-            System.out.println(author_id);
+            int author_id = 1;
+            if (resultSet.next()) {
+                author_id = resultSet.getInt("id");
+                System.out.println(author_id);
+
+                // Rest of your code to insert the comment
+            } else {
+                // Handle the case where no user with the given name was found
+            }
 
             preparedStatement = connection.prepareStatement("INSERT INTO comments (id,post, author, text) VALUES(NULL,?, ?, ?)");
             preparedStatement.setInt(1, comment.getPost_id());
             preparedStatement.setInt(2, author_id);
             preparedStatement.setString(3, comment.getText());
             preparedStatement.executeUpdate();
-            resultSet = preparedStatement.getGeneratedKeys();
 
         } catch (SQLException e) {
             e.printStackTrace();
