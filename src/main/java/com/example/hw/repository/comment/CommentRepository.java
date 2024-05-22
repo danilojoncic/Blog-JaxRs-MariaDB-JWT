@@ -13,18 +13,22 @@ import java.util.List;
 
 public class CommentRepository extends MDBAbstractRepository implements CommentRepositoryInterface {
     @Override
-    public Comment addComment(CommentDTO comment) {
+    public void addComment(CommentDTO comment) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
             connection = this.newConnection();
 
-            String[] generatedColumns = {"id"};
+            preparedStatement = connection.prepareStatement("SELECT id FROM users WHERE name = ?");
+            preparedStatement.setString(1,comment.getAuthor());
+            resultSet = preparedStatement.executeQuery();
+            int author_id = resultSet.getInt("id");
+            System.out.println(author_id);
 
-            preparedStatement = connection.prepareStatement("INSERT INTO comments (post, author, text) VALUES(?, ?, ?)", generatedColumns);
+            preparedStatement = connection.prepareStatement("INSERT INTO comments (id,post, author, text) VALUES(NULL,?, ?, ?)");
             preparedStatement.setInt(1, comment.getPost_id());
-            preparedStatement.setString(2, comment.getAuthor());
+            preparedStatement.setInt(2, author_id);
             preparedStatement.setString(3, comment.getText());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
@@ -36,8 +40,6 @@ public class CommentRepository extends MDBAbstractRepository implements CommentR
             this.closeResultSet(resultSet);
             this.closeConnection(connection);
         }
-
-        return null;
     }
 
     @Override

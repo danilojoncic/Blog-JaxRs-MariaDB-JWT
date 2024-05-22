@@ -1,6 +1,7 @@
 package com.example.hw.resource;
 
 import com.example.hw.domain.Comment;
+import com.example.hw.dto.CommentDTO;
 import com.example.hw.service.CommentService;
 
 import javax.inject.Inject;
@@ -25,9 +26,8 @@ public class CommentResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Comment create(@Valid Comment comment) {
-        System.out.println("POST CALLED: Creating a new comment for post id  " + comment.getPostId());
-        return this.commentService.addComment(comment);
+    public Response create(@Valid CommentDTO comment) {
+        commentService.addComment(comment);
+        return Response.ok("New post added!").build();
     }
 }

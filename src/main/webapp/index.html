@@ -231,21 +231,18 @@
         });
 
         $('#add_comment_button').click(function () {
-            var postId = $('#post_preview_title').data('id');
-            var comment = {
-                author: localStorage.getItem('username').toString(),
-                text: $('#add_comment_contentInput').val(),
-                postId: postId
-            };
-
-            // Get token from local storage
+            var post_id = $('#post_preview_title').data('id');
             var token = localStorage.getItem('token');
 
             $.ajax({
                 url: 'api/comments',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify(comment),
+                data: JSON.stringify({
+                    author : localStorage.getItem('username').toString(),
+                    text: $('#add_comment_contentInput').val(),
+                    post_id: post_id
+                }),
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },

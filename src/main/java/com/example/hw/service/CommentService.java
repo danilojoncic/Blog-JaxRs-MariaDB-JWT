@@ -20,10 +20,8 @@ public class CommentService {
     private UserRepositoryInterface userRepositoryInterface;
 
     //
-    public Comment addComment(Comment comment) {
-        //return this.commentRepository.addComment(comment);
-        //bjk
-        return null;
+    public void addComment(CommentDTO comment) {
+        commentRepository.addComment(comment);
     }
 
     public List<CommentDTO> allComments(int id) {

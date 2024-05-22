@@ -53,7 +53,6 @@ public class RequestFilter implements ContainerRequestFilter {
                 return true;
             }
         }
-
         return false;
     }
 }
