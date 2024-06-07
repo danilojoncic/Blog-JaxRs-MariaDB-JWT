@@ -94,10 +94,7 @@
 <div id="add_new_post_form" class="container" style="display: none;">
     <h2>Post Form</h2>
     <button id="go_back_button1" class="btn btn-primary">Back To All Posts</button>
-    <div class="form-group">
-        <label for="post_authorInput">Author:</label>
-        <input id="post_authorInput" name="post_authorInput" type="text" class="form-control" placeholder="Enter author name" readonly>
-    </div>
+    <div id="name_of_user"></div>
     <div class="form-group">
         <label for="post_titleInput">Title:</label>
         <input id="post_titleInput" name="post_titleInput" type="text" class="form-control" placeholder="Enter post title">
@@ -140,7 +137,6 @@
 
 <script>
     $(document).ready(function () {
-             // Function to decode JWT token
         function parseJwt(token) {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -189,6 +185,7 @@
         });
 
         $('#add_new_post_button').click(function () {
+            $('#name_of_user').val(localStorage.getItem("username"));
             display_new_post_form();
         });
 
@@ -226,7 +223,8 @@
         $('#add_comment_button').click(function () {
             var post_id = $('#post_preview_title').data('id');
             var token = localStorage.getItem('token');
-
+            au = localStorage.getItem('username').toString();
+            tt = $('#add_comment_contentInput').val()
             $.ajax({
                 url: 'api/comments',
                 type: 'POST',
@@ -239,9 +237,8 @@
                 headers: {
                     'Authorization': 'Bearer ' + token
                 },
-                success: function (comment) {
-                    make_comment_element(comment);
-                    display_all_posts()
+                success: function () {
+                    make_comment_element(au,tt);
                 }
             });
         });
@@ -251,7 +248,6 @@
             $('#add_new_post_form').hide();
             $('#post_preview_page').hide();
 
-            // Get token from local storage
             var token = localStorage.getItem('token');
 
             $.ajax({
@@ -274,7 +270,6 @@
             $('#add_new_post_form').show();
             $('#post_preview_page').hide();
 
-            // Pre-fill the author's name
             var userName = localStorage.getItem('userName');
             $('#post_authorInput').val(userName);
         }
@@ -296,12 +291,11 @@
                 },
                 success: function (comments) {
                     $.each(comments, function (index, comment) {
-                        make_comment_element(comment);
+                        make_comment_element(comment.author,comment.text);
                     });
                 }
             });
 
-            // Pre-fill the author's name in the comment form
             var userName = localStorage.getItem('userName');
             $('#add_comment_authorInput').val(userName);
         }
@@ -326,11 +320,11 @@
             $('#posts_list').append(card);
         }
 
-        function make_comment_element(comment) {
+        function make_comment_element(author,text) {
             var commentDiv = $('<div class="card">' +
                 '<div class="card-body">' +
-                '<h5 class="card-title">' + comment.author + '</h5>' +
-                '<p class="card-text">' + comment.text + '</p>' +
+                '<h5 class="card-title">' + author + '</h5>' +
+                '<p class="card-text">' + text + '</p>' +
                 '</div>' +
                 '</div>');
 
